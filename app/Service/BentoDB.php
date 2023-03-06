@@ -7,6 +7,8 @@ use App\Exception\BentoDBException;
 use App\Exception\UnauthorizedException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ServerException;
 
 /**
  * Lightweight wrapper for the BentoDB API.
@@ -61,6 +63,9 @@ class BentoDB
                 default:
                     throw new BentoDBException($e->getResponse()->getReasonPhrase(), $e->getResponse()->getStatusCode());
             }
+        }
+        catch(ConnectException | ServerException $e) {
+            throw new BentoDBException($e->getMessage(), $e->getCode());
         }
     }
 }
