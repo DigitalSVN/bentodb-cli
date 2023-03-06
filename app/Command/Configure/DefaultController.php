@@ -2,10 +2,10 @@
 
 namespace App\Command\Configure;
 
+use App\Exception\BentoDBException;
 use App\Service\BentoDB;
 use App\Service\LocalConfig;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use Minicli\Command\CommandController;
 use Minicli\Input;
 
@@ -32,9 +32,8 @@ class DefaultController extends CommandController
 
             LocalConfig::set('BENTODB_API_KEY', trim($input_api_key));
         }
-        catch (ClientException $e) {
-            $this->getPrinter()->error('Invalid API Key');
-            $this->getPrinter()->info('You can get a new API key from https://www.bentodb.com');
+        catch (BentoDBException $e) {
+            $this->getPrinter()->error('Error: ' . $e->getMessage());
         }
 
         $this->getPrinter()->newline();
