@@ -22,7 +22,7 @@ class DefaultController extends CommandController
             $this->getPrinter()->newline();
         }
         catch (BentoDBException $e) {
-            $this->getPrinter()->error('Error: ' . $e->getMessage());
+            $this->getPrinter()->error(sprintf('Error %s: %s', $e->getCode(), $e->getMessage()));
         }
     }
 }

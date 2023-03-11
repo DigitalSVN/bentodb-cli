@@ -46,7 +46,11 @@ $app->setSignature("BentoDB CLI
 ./bentodb <command> [options]
 
 ./bentodb configure
-./bentodb create");
+./bentodb whoami
+./bentodb create
+./bentodb list
+./bentodb delete id=xyz
+");
 
 try {
     $app->runCommand($argv);

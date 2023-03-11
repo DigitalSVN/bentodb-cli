@@ -33,9 +33,7 @@ class DefaultController extends CommandController
             LocalConfig::set('BENTODB_API_KEY', trim($input_api_key));
         }
         catch (BentoDBException $e) {
-            $this->getPrinter()->error('Error: ' . $e->getMessage());
+            $this->getPrinter()->error(sprintf('Error %s: %s', $e->getCode(), $e->getMessage()));
         }
-
-        $this->getPrinter()->newline();
     }
 }

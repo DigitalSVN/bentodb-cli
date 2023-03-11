@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command\Whoami;
+namespace App\Command\Delete;
 
 use App\Exception\BentoDBException;
 use App\Service\BentoDB;
@@ -11,13 +11,19 @@ class DefaultController extends CommandController
 {
     public function handle(): void
     {
-        $config = $this->app->config;
+        if (!$this->hasParam('id')) {
+            $this->getPrinter()->info('Please supply a database ID');
+            $this->getPrinter()->info('./bentodb delete id=xyz');
+            return;
+        }
 
         try {
             $bentodb = new BentoDB(new Client(), $this->app->config->BENTODB_API_URL, $this->app->config->BENTODB_API_KEY);
-            $user = $bentodb->getUser();
+            $database = $bentodb->deleteDatabase($this->getParam('id'));
 
-            $this->getPrinter()->info('You are logged in as: ' . $user->name . ' (' . $user->email . ')');
+            $this->getPrinter()->success($database->message);
+            $this->getPrinter()->rawOutput(json_encode($database, JSON_PRETTY_PRINT));
+            $this->getPrinter()->newline();
         }
         catch (BentoDBException $e) {
             $this->getPrinter()->error(sprintf('Error %s: %s', $e->getCode(), $e->getMessage()));

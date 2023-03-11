@@ -28,22 +28,27 @@ class BentoDB
 
     public function getUser()
     {
-        return $this->request('GET', $this->api_url . '/user');
+        return $this->request('GET', '/user');
     }
 
     public function createDatabase()
     {
-        return $this->request('POST', $this->api_url . '/databases/create');
+        return $this->request('POST', '/databases/create');
     }
 
-    private function request(string $method, string $url)
+    public function deleteDatabase($id)
+    {
+        return $this->request('DELETE', sprintf('/databases/%s/delete', $id));
+    }
+
+    private function request(string $method, string $path)
     {
         if(!$this->api_key) {
             throw new ApiKeyNotSetException('API KEY not set. Run ./bentodb configure to set your API KEY');
         }
 
         try {
-            $request = $this->client->$method($url, [
+            $request = $this->client->$method($this->api_url . $path, [
                 'headers' => [
                     'Accept'        => 'application/json',
                     'Authorization' => 'Bearer ' . $this->api_key,
@@ -55,13 +60,16 @@ class BentoDB
         }
         catch (ClientException $e) {
             switch($e->getCode()) {
-                case 400:
-                    $json = json_decode($e->getResponse()->getBody());
-                    throw new BentoDBException($json->error, $e->getCode());
                 case 401:
                     throw new UnauthorizedException('Invalid API Key', $e->getCode());
                 default:
-                    throw new BentoDBException($e->getResponse()->getReasonPhrase(), $e->getResponse()->getStatusCode());
+                    $body_object = json_decode($e->getResponse()->getBody());
+                    $human_message = $body_object->error ?? $body_object->message ?? $e->getMessage();
+
+                    throw new BentoDBException(
+                        $human_message,
+                        $e->getResponse()->getStatusCode()
+                    );
             }
         }
         catch(ConnectException | ServerException $e) {
