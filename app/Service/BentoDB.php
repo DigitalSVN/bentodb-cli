@@ -41,6 +41,11 @@ class BentoDB
         return $this->request('DELETE', sprintf('/databases/%s/delete', $id));
     }
 
+    public function listDatabases()
+    {
+        return $this->request('GET', '/databases');
+    }
+
     private function request(string $method, string $path)
     {
         if(!$this->api_key) {

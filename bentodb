@@ -45,11 +45,11 @@ $app->setSignature("BentoDB CLI
 
 ./bentodb <command> [options]
 
-./bentodb configure
-./bentodb whoami
-./bentodb create
-./bentodb list
-./bentodb delete id=xyz
+./bentodb configure         - Set your BentoDB API key
+./bentodb whoami            - Get your BentoDB user information
+./bentodb create            - Create a new database
+./bentodb ls                - List your databases
+./bentodb delete id=xyz     - Delete a database
 ");
 
 try {
