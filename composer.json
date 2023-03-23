@@ -4,7 +4,7 @@
     "homepage": "https://github.com/DigitalSVN/bentodb-cli",
     "license": "MIT",
     "require": {
-        "php": ">=8.0.0",
+        "php": ">=8.1.0",
         "minicli/minicli": "^3.2",
         "guzzlehttp/guzzle": "^7.5"
     },
