@@ -1,0 +1,65 @@
+#!/usr/bin/env php
+<?php
+
+if (php_sapi_name() !== 'cli') {
+    exit;
+}
+
+if (file_exists(__DIR__.'/../../autoload.php')) {
+    // Used when installed as a dependency
+    require __DIR__.'/../../autoload.php';
+} else {
+    // Used for development
+    require __DIR__.'/vendor/autoload.php';
+}
+
+use App\Service\LocalConfig;
+use Minicli\App;
+use Minicli\Exception\CommandNotFoundException;
+
+
+$localConfig = LocalConfig::loadFromFile();
+
+$app = new App([
+    'app_path' => __DIR__ . '/app/Command',
+
+    /**
+     * From local config file
+     */
+    'BENTODB_API_KEY' => $localConfig['BENTODB_API_KEY'] ?? null,
+    'BENTODB_API_URL' => $localConfig['BENTODB_API_URL'] ?? 'https://www.bentodb.com/api',
+]);
+
+$app->setSignature("BentoDB CLI                      
+                       :++:                       
+                    -*@@@@@@*-                    
+                .=..=#@@@@@@%+:.-:                
+             -*%@@@@*-.-**-.:+%@@@@*-             
+         .. +%@@@@@@@%+ .. =#@@@@@@@%+. :         
+      :+%@@%+:.=#@#=.:+%@@%+-.-*@#=..=#@@@*-      
+    -%@@@@@@@@%:   :#@@@@@@@@%-   .#@@@@@@@@@=    
+   *=..=#@@#=.:+%@%+:.=#@@#+:.=#@%+:.-*@@%+:.=#   
+   %@@%*-.  +@@@@@@@@@+    =%@@@@@@@@*. .:+%@@@   
+   %@@@@@ .=.:+%@@@%+:.=##=:.=#@@@%+:.-- @@@@@@   
+   *@@@@@ :@@%+-.-.:+%@@@@@@@*- -.:+%@@= @@@@@#   
+     :+%@ :@@@@@# :.:+%@@@@@*-.- +@@@@@= @@*-     
+        . :@@@@@# *@%+:.==.:=#@% +@@@@@= .        
+            :+%@# *@@@@@: @@@@@% +@@*-            
+               .- *@@@@@- @@@@@% ::               
+                   -*@@@- @@@*-                   
+                      .=: +:                      
+
+./bentodb <command> [options]
+
+./bentodb configure         - Set your BentoDB API key
+./bentodb whoami            - Get your BentoDB user information
+./bentodb create            - Create a new database
+./bentodb ls                - List your databases
+./bentodb delete id=xyz     - Delete a database
+");
+
+try {
+    $app->runCommand($argv);
+} catch (CommandNotFoundException $e) {
+    echo 'An error occurred running the command: ',  $e->getMessage(), "\n";
+}
