@@ -5,7 +5,13 @@ if (php_sapi_name() !== 'cli') {
     exit;
 }
 
-require __DIR__ . '/vendor/autoload.php';
+if (file_exists(__DIR__.'/../../autoload.php')) {
+    // Used when installed as a dependency
+    require __DIR__.'/../../autoload.php';
+} else {
+    // Used for development
+    require __DIR__.'/vendor/autoload.php';
+}
 
 use App\Service\LocalConfig;
 use Minicli\App;

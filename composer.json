@@ -8,6 +8,9 @@
         "minicli/minicli": "^3.2",
         "guzzlehttp/guzzle": "^7.5"
     },
+    "bin": [
+        "bentodb"
+    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/"
