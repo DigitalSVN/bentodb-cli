@@ -49,7 +49,7 @@ class BentoDB
     private function request(string $method, string $path)
     {
         if(!$this->api_key) {
-            throw new ApiKeyNotSetException('API KEY not set. Run ./bentodb configure to set your API KEY');
+            throw new ApiKeyNotSetException('API KEY not set. Run bentodb configure to set your API KEY');
         }
 
         try {

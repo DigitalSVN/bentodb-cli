@@ -13,7 +13,7 @@ class DefaultController extends CommandController
     {
         if (!$this->hasParam('id')) {
             $this->getPrinter()->info('Please supply a database ID');
-            $this->getPrinter()->info('./bentodb delete id=xyz');
+            $this->getPrinter()->info('bentodb delete id=xyz');
             return;
         }
 
