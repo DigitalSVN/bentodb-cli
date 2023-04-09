@@ -15,7 +15,7 @@ class DefaultController extends CommandController
 
         try {
             $bentodb = new BentoDB(new Client(), $this->app->config->BENTODB_API_URL, $this->app->config->BENTODB_API_KEY);
-            $database = $bentodb->createDatabase();
+            $database = $bentodb->createDatabase($this->getParam('name'));
 
             $this->getPrinter()->success($database->message);
             $this->getPrinter()->rawOutput(json_encode($database, JSON_PRETTY_PRINT));

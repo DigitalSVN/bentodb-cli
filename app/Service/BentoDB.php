@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\RequestOptions;
 
 /**
  * Lightweight wrapper for the BentoDB API.
@@ -31,9 +32,15 @@ class BentoDB
         return $this->request('GET', '/user');
     }
 
-    public function createDatabase()
+    public function createDatabase($name = null)
     {
-        return $this->request('POST', '/databases/create');
+        $data = [];
+
+        if($name) {
+            $data['name'] = $name;
+        }
+
+        return $this->request('POST', '/databases/create', $data);
     }
 
     public function deleteDatabase($id)
@@ -46,20 +53,26 @@ class BentoDB
         return $this->request('GET', '/databases');
     }
 
-    private function request(string $method, string $path)
+    private function request(string $method, string $path, array $data = [])
     {
         if(!$this->api_key) {
             throw new ApiKeyNotSetException('API KEY not set. Run bentodb configure to set your API KEY');
         }
 
+        $payload = [
+            'headers' => [
+                'Accept'        => 'application/json',
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'Content-Type'  => 'application/json',
+            ],
+        ];
+
+        if(!empty($data)) {
+            $payload[RequestOptions::JSON] = $data;
+        }
+
         try {
-            $request = $this->client->$method($this->api_url . $path, [
-                'headers' => [
-                    'Accept'        => 'application/json',
-                    'Authorization' => 'Bearer ' . $this->api_key,
-                    'Content-Type'  => 'application/json',
-                ],
-            ]);
+            $request = $this->client->$method($this->api_url . $path, $payload);
 
             return json_decode($request->getBody()->getContents());
         }
