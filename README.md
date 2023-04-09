@@ -26,9 +26,9 @@ export PATH=${PATH}:~/.composer/vendor/bin
 ```bash
 bentodb <command> [options]
 
-bentodb configure         - Set your BentoDB API key
-bentodb whoami            - Get your BentoDB user information
-bentodb create            - Create a new database
-bentodb ls                - List your databases
-bentodb delete id=xyz     - Delete a database
+bentodb configure                   - Set your BentoDB API key
+bentodb whoami                      - Get your BentoDB user information
+bentodb create name=my_database     - Create a new database (with optional name)
+bentodb ls                          - List your databases
+bentodb delete id=xyz               - Delete a database
 ```
